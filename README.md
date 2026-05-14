@@ -1,5 +1,32 @@
-# Automatic rubiks cube solver
-Scrambeling makes 30 random turns and solving restores it to its original shape with the roux method. Cube is also turnable with keys L R U D F B M E S X Y Z, see [Cube notation](https://jperm.net/3x3/moves).
-Test it out at [Rubiks](https://madebydamo.github.io/rubiks/)!
+# Rubik's Cube Solver
 
-The meet and bone of this project is in the package [rubiks_core](./rubiks_core), where the basic model, solving automation tools and everything else is stored. [rubiks_web](./rubiks_web) is just the presentation layer of this project.
+Automatic Rubik's cube solver using the Roux method. Scrambling applies 30 random turns; solving restores the cube to solved state. Interactive cube supports key turns: `L R U D F B M E S X Y Z` (see [cube notation](https://jperm.net/3x3/moves)).
+
+Try it live: [https://madebydamo.github.io/rubiks/](https://madebydamo.github.io/rubiks/)
+
+Compatible plugin for [neo](https://github.com/madebydamo/neo).
+
+## Quick Start (with Nix)
+
+This project uses Nix flakes for reproducible setup.
+
+```bash
+nix develop          # enter dev shell (Dart + just + tools)
+just                 # list available commands
+just launch          # start local dev server at http://localhost:8080
+```
+
+## Available Commands
+
+| Command         | Description                                     |
+| --------------- | ----------------------------------------------- |
+| `just launch`   | Launch web dev server (live reload)             |
+| `just test`     | Run all tests in `rubiks_core`                  |
+| `just generate` | Run core example to generate precalculated maps |
+| `just deploy`   | Deploy web app to GitHub Pages via peanut       |
+
+## Investigation
+
+Core logic lives in [rubiks_core](./rubiks_core). Entry point: [rubiks_core/lib/src/solver/method.dart](./rubiks_core/lib/src/solver/method.dart) (defines `roux2` solver stages). Generate precalculated maps via `just generate` (see [rubiks_core/example/rubiks_core_example.dart](./rubiks_core/example/rubiks_core_example.dart)).
+
+Web UI is in [rubiks_web](./rubiks_web).
