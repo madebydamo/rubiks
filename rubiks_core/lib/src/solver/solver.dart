@@ -58,7 +58,7 @@ class SolvePiece implements SolverInterface {
   Future<List<IntermediateSolveState>> solveStep(IntermediateSolveState interim, FileContentLoader loader) async {
     /* _file ??= File(); */
     _table ??=
-        LookupTable.fromJson(await loader.getFileContent("/data/${_getFileName()}"));
+        LookupTable.fromJson(await loader.getFileContent("data/${_getFileName()}"));
     List<IntermediateSolveState> result = [];
     int i = 0;
     do {
@@ -95,7 +95,7 @@ class SolvePiece implements SolverInterface {
   @override
   void generate(FileContentLoader loader) {
     /* _file ??= File("./data/${_getFileName()}"); */
-    if (loader.exists("/data/${_getFileName()}")) return;
+    if (loader.exists("data/${_getFileName()}")) return;
     counter = 0;
     Cube cube = Cube.std();
     _table = LookupTable();
@@ -105,7 +105,7 @@ class SolvePiece implements SolverInterface {
     /* _file! */
     /*     .writeAsStringSync(_table!.toJson(), mode: FileMode.write, flush: true); */
 
-    loader.writeFileContent("/data/${_getFileName()}", _table!.toJson());
+    loader.writeFileContent("data/${_getFileName()}", _table!.toJson());
   }
 
   void _generateMove(int depth, Cube cube, Turns premove) {
@@ -171,7 +171,7 @@ class SolveAlgorithm extends SolverInterface {
   @override
   void generate(FileContentLoader loader) {
     /* _file ??= File("./data/${_getFileName()}"); */
-    if (loader.exists("/data/${_getFileName()}")) return;
+    if (loader.exists("data/${_getFileName()}")) return;
     Cube std = Cube.std();
     _table = LookupTable();
     for (Turns algo in algorithmSet) {
@@ -188,7 +188,7 @@ class SolveAlgorithm extends SolverInterface {
     }
     /* if (!_file!.existsSync()) _file!.create(recursive: true); */
     /* _file!.writeAsString(_table!.toJson(), mode: FileMode.write, flush: true); */
-    loader.writeFileContent("/data/${_getFileName()}", _table!.toJson());
+    loader.writeFileContent("data/${_getFileName()}", _table!.toJson());
   }
 
   String _getFileName() {
@@ -239,7 +239,7 @@ class SolveAlgorithm extends SolverInterface {
   Future<List<IntermediateSolveState>> solveStep(IntermediateSolveState interim, FileContentLoader loader) async {
     /* _file ??= File("./data/${_getFileName()}"); */
     _table ??=
-        LookupTable.fromJson(await loader.getFileContent("/data/${_getFileName()}"));
+        LookupTable.fromJson(await loader.getFileContent("data/${_getFileName()}"));
     List<IntermediateSolveState> result = [];
     result.addAll(_table!
         .getTurns(interim.cube, newEdges, newCorners, interim.conf)

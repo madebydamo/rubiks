@@ -38,7 +38,7 @@ class WebContentLoader extends FileContentLoader {
 
   @override
   Future<String> getFileContent(String path) {
-    return HttpRequest.getString(".$path");
+    return HttpRequest.getString("$path");
   }
 
   @override
