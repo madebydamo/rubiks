@@ -1,40 +1,20 @@
+# DO-NOT-EDIT. This file was auto-generated using github:vic/flake-file.
+# Use `nix run .#write-flake` to regenerate it.
 {
-  description = "Rubiks cube solver - Dart core + web";
+  outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./nix);
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-
-    # === Add this for Dart < 3.0 ===
-    nixpkgs-dart2.url = "github:NixOS/nixpkgs/1b7a6a6e57661d7d4e0775658930059b77ce94a4"; # e.g. 1b7a6a6e57661d7d4e0775658930059b77ce94a4
-
-    flake-utils.url = "github:numtide/flake-utils";
+    flake-file.url = "github:vic/flake-file";
+    flake-parts = {
+      url = "github:hercules-ci/flake-parts";
+      inputs.nixpkgs-lib.follows = "nixpkgs";
+    };
+    import-tree.url = "github:vic/import-tree";
+    neo = {
+      url = "github:madebydamo/neo";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+    nixpkgs-dart2.url = "github:NixOS/nixpkgs/1b7a6a6e57661d7d4e0775658930059b77ce94a4";
   };
-
-  outputs = {
-    self,
-    nixpkgs,
-    nixpkgs-dart2,
-    flake-utils,
-  }:
-    flake-utils.lib.eachDefaultSystem (
-      system: let
-        pkgs = nixpkgs.legacyPackages.${system};
-        pkgsDart2 = nixpkgs-dart2.legacyPackages.${system};
-      in {
-        devShells.default = pkgs.mkShell {
-          buildInputs = with pkgs; [
-            pkgsDart2.dart
-            just
-            git
-            python3
-          ];
-
-          # Optional: helpful environment variables
-          shellHook = ''
-            echo "Using Dart: $(dart --version)"
-            zsh
-          '';
-        };
-      }
-    );
 }
