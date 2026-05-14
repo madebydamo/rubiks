@@ -3,6 +3,8 @@ import 'dart:math';
 
 import 'package:rubiks_core/rubiks_core.dart';
 
+import 'cubeView.dart';
+
 class Solve {
   static late Solve _solve;
 
@@ -19,6 +21,10 @@ class Solve {
   }
 
   void solve() async {
+    ButtonElement scrambleBtn = querySelector("#scrambleButton")! as ButtonElement;
+    ButtonElement solveBtn = querySelector("#solveButton")! as ButtonElement;
+    scrambleBtn.disabled = true;
+    solveBtn.disabled = true;
     List<IntermediateSolveState> solution =
         await roux2.solve(getCube(), WebContentLoader());
     if (solution.isNotEmpty) {
@@ -26,6 +32,15 @@ class Solve {
         turn(turnSingle);
       }
     }
+    void reEnable() {
+      if (isBusy()) {
+        Future.delayed(Duration(milliseconds: 100), reEnable);
+      } else {
+        scrambleBtn.disabled = false;
+        solveBtn.disabled = false;
+      }
+    }
+    reEnable();
   }
 }
 

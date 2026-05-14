@@ -10,6 +10,8 @@ List<String> origTransform = _generateTransforms();
 Queue<Turn> turns = Queue();
 bool inAnimation = false;
 
+bool isBusy() => inAnimation;
+
 List<String> _generateTransforms() {
   List<String> origTransform = List.empty(growable: true);
   for (var i = 0; i < 26; i++) {
@@ -40,12 +42,12 @@ void turnAll(Cube cube, Turns turns) {
   }
 }
 
-void turn(Cube cube, Turn singleTurn) {
+void turn(Cube cube, Turn singleTurn, [double duration = 500.0]) {
   turns.addFirst(singleTurn);
-  _turnNext(cube);
+  _turnNext(cube, duration);
 }
 
-void _turnNext(Cube cube) {
+void _turnNext(Cube cube, [double duration = 500.0]) {
   Turn turn = turns.last;
   String? axis = turnToAxis[turn.turn.toLowerCase()];
   if (axis == null) {
@@ -64,13 +66,13 @@ void _turnNext(Cube cube) {
     }
   }
   if (inAnimation) return;
-  _animate(cube, indecies, turn, axis);
+  _animate(cube, indecies, turn, axis, duration);
 }
 
-void _animate(Cube cube, List<int> indecies, Turn turn, String axis) {
+void _animate(Cube cube, List<int> indecies, Turn turn, String axis, [double duration = 500.0]) {
   inAnimation = true;
   DateTime current = DateTime.now();
-  double animationLength = 500.0;
+  double animationLength = duration;
   void rotatePiece(highResTime) {
     int milli =
         DateTime.now().millisecondsSinceEpoch - current.millisecondsSinceEpoch;
@@ -78,8 +80,11 @@ void _animate(Cube cube, List<int> indecies, Turn turn, String axis) {
       inAnimation = false;
       cube.turn(turns.removeLast());
       showCube(cube);
+      updateMovePreview();
       if (turns.isNotEmpty) {
-        _turnNext(cube);
+        _turnNext(cube, duration);
+      } else {
+        clearMovePreview();
       }
       return;
     }
@@ -95,5 +100,28 @@ void _animate(Cube cube, List<int> indecies, Turn turn, String axis) {
     window.requestAnimationFrame(rotatePiece);
   }
 
+  updateMovePreview();
   window.requestAnimationFrame(rotatePiece);
+}
+
+void updateMovePreview() {
+  Element preview = querySelector("#movePreview")!;
+  List<Turn> q = turns.toList();
+  if (q.isEmpty) {
+    preview.innerHtml = '';
+    return;
+  }
+  // q[0] oldest added (last exec), q.last = next current
+  List<String> upcoming = q.reversed.map((t) => t.toString()).toList();
+  int remaining = upcoming.length;
+  String current = upcoming.first;
+  List<String> rest = upcoming.sublist(1);
+  String html = '<span class="group"><span class="counter">${remaining}</span>';
+  html += '<span class="current">$current</span></span>';
+  html += '<span class="rest">${rest.join(' ')}</span>';
+  preview.innerHtml = html;
+}
+
+void clearMovePreview() {
+  querySelector("#movePreview")!.innerHtml = '';
 }

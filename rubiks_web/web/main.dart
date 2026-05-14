@@ -14,7 +14,7 @@ Point<num>? startPivot;
 
 void main() {
   showCube(cube);
-  Scramble((Turn turnS) => turn(cube, turnS));
+  Scramble((Turn turnS, [double d = 500]) => turn(cube, turnS, d));
   document.onKeyDown.listen(keydown);
   initRotation();
   Solve(() => cube, (Turn turns) => turn(cube, turns));
@@ -65,14 +65,16 @@ void move(num x, num y) {
 }
 
 void keydown(KeyboardEvent event) {
-  String? key = event.key;
-  if (key != null) {
-    if (key == "0") {
-      Pivot().reset();
-      return;
-    } else if (key == "9") {
-      Pivot().backside();
-    }
-    turn(cube, Turn(key));
+  String? key = event.key?.toLowerCase();
+  if (key == "0") {
+    Pivot().reset();
+    return;
+  } else if (key == "9") {
+    Pivot().backside();
+    return;
+  }
+  if (key != null && RegExp(r'^[rlmxfbszudey]$').hasMatch(key)) {
+    bool inverted = event.shiftKey;
+    turn(cube, Turn(key, inverted: inverted));
   }
 }
