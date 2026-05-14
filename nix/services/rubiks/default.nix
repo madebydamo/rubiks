@@ -87,6 +87,21 @@
   in {
     config = lib.mkIf cfg.enabled {
       # networking.firewall.allowedTCPPorts = [cfg.port];
+      services.nginx = {
+        enable = true;
+        virtualHosts."rubiks.local" = {
+          listen = [
+            {
+              addr = "0.0.0.0";
+              port = cfg.port;
+            }
+          ];
+          root = rubiksWeb;
+          locations."/" = {
+            tryFiles = "$uri $uri/ /index.html";
+          };
+        };
+      };
 
       environment.etc."nginx/conf.d/rubiks.conf".text = ''
         server {
