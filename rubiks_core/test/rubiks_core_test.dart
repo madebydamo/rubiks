@@ -19,21 +19,17 @@ void main() {
 }
 
 class LocalLoader extends FileContentLoader {
-  @override
-  bool exists(String path) {
-    File file = File(path);
-    return file.existsSync();
-  }
+  String _resolve(String path) =>
+      path.startsWith('data/') ? 'lib/$path' : path;
 
   @override
-  Future<String> getFileContent(String path) {
-    File file = File(path);
-    return file.readAsString();
-  }
+  bool exists(String path) => File(_resolve(path)).existsSync();
 
   @override
-  writeFileContent(String path, String content) {
-    File file = File(path);
-    file.writeAsStringSync(content, mode: FileMode.write, flush: true);
-  }
+  Future<String> getFileContent(String path) =>
+      File(_resolve(path)).readAsString();
+
+  @override
+  writeFileContent(String path, String content) =>
+      File(_resolve(path)).writeAsStringSync(content, mode: FileMode.write, flush: true);
 }
