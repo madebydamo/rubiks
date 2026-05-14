@@ -4,14 +4,14 @@ import 'package:rubiks_core/rubiks_core.dart';
 
 void main() async {
   /*Generate moves*/
-  /* SolverBuilder test = SolverBuilder.start().solvePieces( */
-  /*     edges: [EdgePosition.LD], */
-  /*     corners: [CornerPosition.LDB, CornerPosition.LDF], */
-  /*     depth: 2); */
-  /* test.generate(); */
-  /* SolverBuilder testAlgo = SolverBuilder.start().solveAlgo(CMLL); */
-  /* testAlgo.generate(); */
   LocalLoader loader = LocalLoader();
+  SolverBuilder test = SolverBuilder.start().solvePieces(
+      edges: [EdgePosition.LD],
+      corners: [CornerPosition.LDB, CornerPosition.LDF],
+      depth: 2);
+  test.generate(loader);
+  SolverBuilder testAlgo = SolverBuilder.start().solveAlgo(CMLL);
+  testAlgo.generate(loader);
   roux2.generate(loader);
   /* roux.generate(); */
   Cube cube = Cube.std();
