@@ -33,7 +33,7 @@
 
       outputHashMode = "recursive";
       outputHashAlgo = "sha256";
-      outputHash = "sha256-B5U7YmTsnqdpjo2OqdlBq510YIoGLSpBLmHE6qaNkds=";
+      outputHash = "sha256-+J30YRWKbf91vFhSmvwDNfnZ9gqqKAM2EA7pYYJNSwI=";
 
       buildPhase = ''
         export PUB_CACHE=$out
